@@ -1,0 +1,62 @@
+{
+  "name": "@elizaos/plugin-newsreporter",
+  "description": "AI news reporter that presents stories to audiences with commerce integration",
+  "version": "1.6.5-alpha.20",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "packageType": "plugin",
+  "platform": "node",
+  "license": "MIT",
+  "author": "elizaOS",
+  "keywords": [
+    "plugin",
+    "elizaos",
+    "newsreporter",
+    "journalist",
+    "commerce",
+    "storytelling"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/elizaos/eliza"
+  },
+  "homepage": "https://elizaos.ai",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "package.json"
+  ],
+  "dependencies": {
+    "@elizaos/core": "workspace:*",
+    "@elizaos/plugin-commerce": "workspace:*",
+    "zod": "^3.24.4"
+  },
+  "devDependencies": {
+    "@elizaos/cli": "workspace:*",
+    "prettier": "3.5.3",
+    "typescript": "5.8.2"
+  },
+  "scripts": {
+    "start": "elizaos start",
+    "dev": "elizaos dev",
+    "build": "bun run build.ts",
+    "lint": "prettier --write ./src",
+    "test": "bun test",
+    "format": "prettier --write ./src",
+    "format:check": "prettier --check ./src"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
