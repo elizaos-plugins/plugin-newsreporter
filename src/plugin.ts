@@ -1,6 +1,17 @@
 import type { Plugin } from '@elizaos/core';
 import { NewsReporterService } from './services/news-reporter-service';
-import { storyPromptProvider, reporterBusinessProvider } from './providers';
+import {
+  // Multi-resolution providers
+  coverageOverviewProvider,
+  coverageProvider,
+  coverageFullProvider,
+  reportsOverviewProvider,
+  reportsProvider,
+  reportsFullProvider,
+  // Output mechanism
+  storyPromptProvider,
+  reporterBusinessProvider,
+} from './providers';
 import { feedbackSentinelEvaluator, coverageTrackerEvaluator } from './evaluators';
 import {
   quoteReportAction,
@@ -40,10 +51,20 @@ export const newsreporterPlugin: Plugin = {
   // Service: Single stateful service managing coverage and commerce
   services: [NewsReporterService as unknown as typeof import('@elizaos/core').Service],
 
-  // Providers: Output mechanism + business context
+  // Providers: Multi-resolution dynamic providers + output mechanism
   providers: [
-    storyPromptProvider, // Room-aware storytelling guidance (not dynamic, early-exits cheaply)
-    reporterBusinessProvider, // Commerce capabilities
+    // Coverage state - low, medium, high resolution
+    coverageOverviewProvider,
+    coverageProvider,
+    coverageFullProvider,
+    // Reports - low, medium, high resolution
+    reportsOverviewProvider,
+    reportsProvider,
+    reportsFullProvider,
+    // Output mechanism (not dynamic - runs every time but early-exits cheaply)
+    storyPromptProvider,
+    // Commerce capabilities
+    reporterBusinessProvider,
   ],
 
   // Evaluators: Coverage tracking + feedback detection

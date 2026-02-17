@@ -10,8 +10,17 @@ import { getArchetype } from '../knowledge/story-archetypes';
  * This is NOT dynamic - it's included in every composeState() call, but early-exits cheaply
  * for rooms that aren't configured output rooms.
  *
- * PRIMARY: Reads stories directly from investigator service (avoids provider ordering issues)
- * FALLBACK: Reads from state.data.providers for composability with non-investigator sources
+ * WHY READ FROM STATE (NOT DIRECT SERVICE CALLS):
+ * - Composability: Works with ANY plugin that provides NEWS_STORIES
+ * - No tight coupling to plugin-investigator
+ * - Follows standard bootstrap flow: compose state → draft
+ * - Stories are in state already (from dynamic providers)
+ * - Can be tested/mocked easily
+ *
+ * COMPOSABILITY WIN:
+ * - Don't care WHO provides stories (investigator, RSS, manual, etc.)
+ * - Just read from state.data.providers.NEWS_STORIES
+ * - Pure data contract, no service dependencies
  */
 export const storyPromptProvider: Provider = {
   name: 'STORY_PROMPT',
@@ -31,17 +40,9 @@ export const storyPromptProvider: Provider = {
     try {
       const room = await runtime.getRoom(message.roomId);
 
-      // PRIMARY: read stories directly from investigator service (avoids provider ordering issues)
-      // FALLBACK: read from state.data.providers for composability with non-investigator story sources
-      const investigator = runtime.getService('investigator');
-      let stories: any[];
-
-      if (investigator && typeof (investigator as any).getActiveStories === 'function') {
-        stories = await (investigator as any).getActiveStories();
-      } else {
-        const storiesData = state?.data?.providers?.NEWS_STORIES?.data;
-        stories = storiesData?.stories || [];
-      }
+      // Read stories from state (populated by investigator's dynamic NEWS_STORIES provider)
+      const storiesData = state?.data?.providers?.NEWS_STORIES?.data;
+      const stories: any[] = storiesData?.stories || [];
 
       if (stories.length === 0) {
         return { text: '', values: {}, data: {} };
