@@ -90,7 +90,11 @@ Date Range: ${new Date(oldest).toISOString().split('T')[0]} to ${new Date(newest
  * NEWS_REPORTS - Medium Resolution
  *
  * Returns: CSV of reports with metadata, no content bodies
- * Columns: reportType, title, wordCount, generatedAt, jobId, storyCount
+ * Columns: entityRef, reportType, title, wordCount, generatedAt, jobId, storyCount
+ *
+ * ENTITY REFS: Each row includes entityRef for actions to reference
+ * Format: entity:report:newsreporter:{uuid}
+ * Example: entity:report:newsreporter:550e8400-e29b-41d4-a716-446655440000
  *
  * Use when: Planning needs to scan available reports
  * Token cost: ~20-30 tokens per report
@@ -118,7 +122,8 @@ export const reportsProvider: Provider = {
       }
 
       // CSV format for token efficiency
-      let csv = 'reportType,title,wordCount,generatedAt,jobId,storyCount\n';
+      // ENTITY REF: Standardized format for actions to reference reports
+      let csv = 'entityRef,reportType,title,wordCount,generatedAt,jobId,storyCount\n';
 
       for (const m of memories) {
         const meta = (m.metadata || {}) as Record<string, unknown>;
@@ -129,8 +134,9 @@ export const reportsProvider: Provider = {
         const jobId = meta.jobId || 'none';
         const storyIds = meta.storyIds as string[];
         const storyCount = storyIds?.length || 0;
+        const entityRef = `entity:report:newsreporter:${m.id}`;
 
-        csv += `${reportType},"${title}",${wordCount},${generatedAt},${jobId},${storyCount}\n`;
+        csv += `${entityRef},${reportType},"${title}",${wordCount},${generatedAt},${jobId},${storyCount}\n`;
       }
 
       return {
