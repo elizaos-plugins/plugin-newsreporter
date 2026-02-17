@@ -12,6 +12,12 @@ export {
   reportsFullProvider,
 } from './reports-providers';
 
+// Plugin info providers
+export {
+  newsreporterSettingsProvider,
+  newsreporterUsageProvider,
+} from './plugin-info-providers';
+
 // Output mechanism provider (not multi-resolution)
 export { storyPromptProvider } from './story-prompt-provider';
 

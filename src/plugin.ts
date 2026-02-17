@@ -8,6 +8,9 @@ import {
   reportsOverviewProvider,
   reportsProvider,
   reportsFullProvider,
+  // Plugin info providers
+  newsreporterSettingsProvider,
+  newsreporterUsageProvider,
   // Output mechanism
   storyPromptProvider,
   reporterBusinessProvider,
@@ -28,9 +31,16 @@ import { banner } from './banner';
  * provider) and tells stories to audiences. Manages coverage, cadence, and commerce.
  *
  * Output mechanism:
- * - STORY_PROMPT provider: Dynamically adapts per room, surfaces relevant stories
+ * - STORY_PROMPT provider: Adapts per room, surfaces relevant stories
  * - Coverage pump: Ensures regular mentions without spam
- * - Anti-spam safeguards: Cadence, daily caps, strike system, sentiment checks
+ * - Anti-spam safeguards: Cadence, daily caps, strike system
+ *
+ * Public API (8 dynamic providers + 1 output provider):
+ * - COVERAGE_STATE (3 resolutions: overview, default, full)
+ * - NEWS_REPORTS (3 resolutions: overview, default, full)
+ * - NEWSREPORTER_SETTINGS (plugin configuration)
+ * - NEWSREPORTER_USAGE (usage instructions)
+ * - STORY_PROMPT (output mechanism, not dynamic)
  *
  * Commerce integration:
  * - Commissioned reports via plugin-commerce
@@ -61,6 +71,9 @@ export const newsreporterPlugin: Plugin = {
     reportsOverviewProvider,
     reportsProvider,
     reportsFullProvider,
+    // Plugin info - settings and usage
+    newsreporterSettingsProvider,
+    newsreporterUsageProvider,
     // Output mechanism (not dynamic - runs every time but early-exits cheaply)
     storyPromptProvider,
     // Commerce capabilities
